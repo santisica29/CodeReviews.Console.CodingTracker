@@ -36,7 +36,7 @@ internal class CodingController
         var affectedRows = connection.Execute(sql, new { StartTime = startTime, EndTime = endTime, Duration = session.CalculateDuration().ToString() });
 
         if (affectedRows > 0) Helpers.DisplayMessage("Addition completed.", "green");
-        else Helpers.Helpers.DisplayMessage("No changes made");
+        else Helpers.DisplayMessage("No changes made");
 
         AnsiConsole.MarkupLine("Press any key to continue.");
         Console.ReadKey();

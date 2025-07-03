@@ -17,6 +17,7 @@ internal class UserInterface
             var choice = AnsiConsole.Prompt(
             new SelectionPrompt<MenuOption>()
             .Title("CODING TRACKER")
+            .UseConverter(e => Helpers.GetDescription(e))
             .AddChoices(Enum.GetValues<MenuOption>()));
 
             switch (choice)

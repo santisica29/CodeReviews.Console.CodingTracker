@@ -2,8 +2,10 @@
 using CodingTracker.View;
 using ConsoleTableExt;
 using Spectre.Console;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 
 namespace CodingTracker;
 internal static class Helpers
@@ -191,15 +193,24 @@ internal static class Helpers
         }
     }
 
-    internal void DisplayMessage(string message, string color = "blue")
+    internal static void DisplayMessage(string message, string color = "blue")
     {
         AnsiConsole.MarkupLine($"[{color}]{message}[/]");
     }
 
-    internal bool ConfirmDeletion(string itemName)
+    internal static bool ConfirmDeletion(string itemName)
     {
         var confrim = AnsiConsole.Confirm($"Are you sure you want to delete {itemName}?");
 
         return confrim;
+    }
+
+    internal static string GetDescription(Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+
+        var attr = field?.GetCustomAttribute<DescriptionAttribute>();
+
+        return attr?.Description ?? value.ToString();
     }
 }
