@@ -1,4 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
+using System.Configuration;
+
 
 namespace CodingTracker.Data;
 internal static class DatabaseInitializer
