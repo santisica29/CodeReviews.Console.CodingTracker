@@ -7,7 +7,7 @@ using static CodingTracker.Enums;
 using System.Globalization;
 
 namespace CodingTracker.Controller;
-internal class CodingController : BaseController
+internal class CodingController
 {
     public void AddSession(string? startTime = null, string? endTime = null)
     {
@@ -35,8 +35,8 @@ internal class CodingController : BaseController
 
         var affectedRows = connection.Execute(sql, new { StartTime = startTime, EndTime = endTime, Duration = session.CalculateDuration().ToString() });
 
-        if (affectedRows > 0) DisplayMessage("Addition completed.", "green");
-        else DisplayMessage("No changes made");
+        if (affectedRows > 0) Helpers.DisplayMessage("Addition completed.", "green");
+        else Helpers.Helpers.DisplayMessage("No changes made");
 
         AnsiConsole.MarkupLine("Press any key to continue.");
         Console.ReadKey();
@@ -54,19 +54,19 @@ internal class CodingController : BaseController
             .UseConverter(s => $"{s.Id} - {s.StartTime} - {s.EndTime} - {s.Duration}")
             .AddChoices(list));
 
-        if (ConfirmDeletion(sessionToDelete.ToString()))
+        if (Helpers.ConfirmDeletion(sessionToDelete.ToString()))
         {
             using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
             var sql = $@"DELETE from {DatabaseInitializer.GetDBName()} WHERE Id = @Id";
 
             var affectedRows = connection.Execute(sql, new { sessionToDelete.Id });
 
-            if (affectedRows > 0) DisplayMessage("Deletion completed.", "green");
-            else DisplayMessage("No changes made");
+            if (affectedRows > 0) Helpers.DisplayMessage("Deletion completed.", "green");
+            else Helpers.DisplayMessage("No changes made");
         }
         else
         {
-            DisplayMessage("Deletion canceled", "yellow");
+            Helpers.DisplayMessage("Deletion canceled", "yellow");
         }
 
         AnsiConsole.MarkupLine("Press any key to continue.");
@@ -107,15 +107,15 @@ internal class CodingController : BaseController
 
         var affectedRows = connection.Execute(sql, new { sessionToUpdate.Id, NewStartTime = newStartTime, NewEndTime = newEndTime, Duration = newSession.CalculateDuration().ToString() });
 
-        if (affectedRows > 0) DisplayMessage("Update successful.", "green");
-        else DisplayMessage("No changes made");
+        if (affectedRows > 0) Helpers.DisplayMessage("Update successful.", "green");
+        else Helpers.DisplayMessage("No changes made");
 
         AnsiConsole.MarkupLine("Press any key to continue.");
         Console.ReadKey();
     }
     public void StartSession()
     {
-        DisplayMessage("Session started", "blue");
+        Helpers.DisplayMessage("Session started", "blue");
         var startTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
 
         var timer = Helpers.RunStopWatch();
@@ -161,7 +161,7 @@ internal class CodingController : BaseController
 
     public void ViewReportOfCodingSession()
     {
-        DisplayMessage("Get your coding tracker report!");
+        Helpers.DisplayMessage("Get your coding tracker report!");
 
         var choice = AnsiConsole.Prompt(
             new SelectionPrompt<ReportOption>()

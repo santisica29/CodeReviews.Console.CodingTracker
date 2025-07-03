@@ -190,4 +190,16 @@ internal static class Helpers
             return;
         }
     }
+
+    internal void DisplayMessage(string message, string color = "blue")
+    {
+        AnsiConsole.MarkupLine($"[{color}]{message}[/]");
+    }
+
+    internal bool ConfirmDeletion(string itemName)
+    {
+        var confrim = AnsiConsole.Confirm($"Are you sure you want to delete {itemName}?");
+
+        return confrim;
+    }
 }
