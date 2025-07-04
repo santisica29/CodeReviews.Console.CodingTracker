@@ -9,6 +9,8 @@ using System.Globalization;
 namespace CodingTracker.Controller;
 internal class CodingController
 {
+    private readonly DatabaseMethods databaseMethods = new();
+
     public void AddSession(string? startTime = null, string? endTime = null)
     {
         if (startTime == null || endTime == null)
@@ -28,12 +30,7 @@ internal class CodingController
             DateTime.ParseExact(endTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"))
         );
 
-        using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
-        var sql =
-            @$"INSERT INTO {DatabaseInitializer.GetDBName()} (startTime, endTime, duration)
-               VALUES (@StartTime, @EndTime, @Duration)";
-
-        var affectedRows = connection.Execute(sql, new { StartTime = startTime, EndTime = endTime, Duration = session.CalculateDuration().ToString() });
+        var affectedRows = databaseMethods.CreateSession(session);
 
         if (affectedRows > 0) Helpers.DisplayMessage("Addition completed.", "green");
         else Helpers.DisplayMessage("No changes made");
