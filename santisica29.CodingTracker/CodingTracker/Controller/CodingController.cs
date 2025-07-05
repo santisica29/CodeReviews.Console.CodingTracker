@@ -55,10 +55,7 @@ internal class CodingController
 
         if (Helpers.ConfirmDeletion(sessionToDelete.ToString()))
         {
-            using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
-            var sql = $@"DELETE from {DatabaseInitializer.GetDBName()} WHERE Id = @Id";
-
-            var affectedRows = connection.Execute(sql, new { sessionToDelete.Id });
+            var affectedRows = databaseMethods.DeleteSession(sessionToDelete);
 
             if (affectedRows > 0) Helpers.DisplayMessage("Deletion completed.", "green");
             else Helpers.DisplayMessage("No changes made");

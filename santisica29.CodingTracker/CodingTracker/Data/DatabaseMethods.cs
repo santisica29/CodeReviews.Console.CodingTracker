@@ -17,4 +17,14 @@ internal class DatabaseMethods
 
         return affectedRows;
     }
+
+    public int DeleteSession(CodingSession sessionToDelete)
+    {
+        using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
+        var sql = $@"DELETE from {DatabaseInitializer.GetDBName()} WHERE Id = @Id";
+
+        var affectedRows = connection.Execute(sql, new { sessionToDelete.Id });
+
+        return affectedRows;
+    }
 }
