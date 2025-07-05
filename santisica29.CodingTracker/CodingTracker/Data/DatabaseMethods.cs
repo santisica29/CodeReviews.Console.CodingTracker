@@ -1,6 +1,7 @@
 ﻿using CodingTracker.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
+using System.Globalization;
 
 namespace CodingTracker.Data;
 internal class DatabaseMethods
@@ -26,5 +27,21 @@ internal class DatabaseMethods
         var affectedRows = connection.Execute(sql, new { sessionToDelete.Id });
 
         return affectedRows;
+    }
+
+    public int UpdateSession(object session)
+    {
+        using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
+
+        var sql = @$"UPDATE {DatabaseInitializer.GetDBName()} 
+                    SET StartTime = @NewStartTime, 
+                    EndTime = @NewEndTime,
+                    Duration = @Duration
+                    WHERE Id = @Id";
+
+        var affectedRows = connection.Execute(sql, session);
+
+        return affectedRows;
+
     }
 }

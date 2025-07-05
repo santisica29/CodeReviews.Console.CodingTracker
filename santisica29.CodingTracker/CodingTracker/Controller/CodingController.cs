@@ -77,16 +77,9 @@ internal class CodingController
 
         var sessionToUpdate = AnsiConsole.Prompt(
             new SelectionPrompt<CodingSession>()
-            .Title("Select a [red]session[/] to delete:")
+            .Title("Select a [red]session[/] to update:")
             .UseConverter(s => $"{s.Id} - {s.StartTime} - {s.EndTime} - {s.Duration}")
             .AddChoices(list));
-
-        using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
-        var sql = @$"UPDATE {DatabaseInitializer.GetDBName()} 
-                    SET StartTime = @NewStartTime, 
-                    EndTime = @NewEndTime,
-                    Duration = @Duration
-                    WHERE Id = @Id";
 
         var newStartTime = Helpers.GetDateInput("Enter the start time of your coding session (yyyy-MM-dd HH:mm)");
         var newEndTime = Helpers.GetDateInput("Enter the end time of your coding session (yyyy-MM-dd HH:mm)");
@@ -96,12 +89,14 @@ internal class CodingController
             newEndTime = Helpers.GetDateInput("Invalid input. End time must be higher than start time.");
         }
 
-        var newSession = new CodingSession(
+        var session = new CodingSession(
             DateTime.ParseExact(newStartTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US")),
             DateTime.ParseExact(newEndTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"))
         );
 
-        var affectedRows = connection.Execute(sql, new { sessionToUpdate.Id, NewStartTime = newStartTime, NewEndTime = newEndTime, Duration = newSession.CalculateDuration().ToString() });
+        var newSession = new { Id = sessionToUpdate.Id, NewStartTime = newStartTime, NewEndTime = newEndTime, Duration = session.CalculateDuration().ToString()};
+
+        var affectedRows = databaseMethods.UpdateSession(newSession);
 
         if (affectedRows > 0) Helpers.DisplayMessage("Update successful.", "green");
         else Helpers.DisplayMessage("No changes made");
