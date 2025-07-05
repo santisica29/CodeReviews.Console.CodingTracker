@@ -137,7 +137,7 @@ internal static class Helpers
                 item.Id,
                 item.StartTime.ToString("dd-MMM-yyyy HH:mm tt"),
                 item.EndTime.ToString("dd-MMM-yyyy HH:mm tt"),
-                $"{item.Duration.Hours}h {item.Duration.Minutes}m"
+                $"{(int)item.Duration.TotalHours}h {item.Duration.Minutes}m"
             };
 
             tableData.Add(row);
@@ -168,8 +168,8 @@ internal static class Helpers
             new
             {
                NumOfSessions = count,
-               Total = $"{total.Hours}h {total.Minutes}m",
-               Avg = $"{avg.Hours}h {avg.Minutes}m"
+               Total = $"{(int)total.TotalHours}h {total.Minutes}m",
+               Avg = $"{(int)avg.TotalHours}h {avg.Minutes}m"
             }
             
         };
