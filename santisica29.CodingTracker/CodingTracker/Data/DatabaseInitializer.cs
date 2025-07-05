@@ -1,18 +1,24 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Configuration;
 
-
 namespace CodingTracker.Data;
 internal static class DatabaseInitializer
 {
     internal static string GetConnectionString()
     {
-        return ConfigurationManager.AppSettings["ConnectionString"];
+        string dbPath = Path.Combine(ProjectRoot(), GetDBName());
+        string connectionString = $"Data Source={dbPath}.db";
+        return connectionString;
     }
 
     internal static string GetDBName()
     {
-        return ConfigurationManager.AppSettings["DatabasePath"];
+        return ConfigurationManager.AppSettings["DatabaseFileName"];
+    }
+
+    internal static string ProjectRoot()
+    {
+        return Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\.."));
     }
     internal static void CreateDatabase()
     {
