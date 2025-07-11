@@ -1,7 +1,5 @@
 ﻿using CodingTracker.Data;
 using CodingTracker.Models;
-using Dapper;
-using Microsoft.Data.Sqlite;
 using Spectre.Console;
 using static CodingTracker.Enums;
 using System.Globalization;
@@ -20,7 +18,7 @@ internal class CodingController
             endTime = Helpers.GetDateInput("Enter the end time of your coding session (yyyy-MM-dd HH:mm)\nPress 't' to enter actual time.");
         }
 
-        while (Helpers.IsEndTimeLowerThanStartTime(startTime, endTime))
+        while (Validation.IsEndTimeLowerThanStartTime(startTime, endTime))
         {
             endTime = Helpers.GetDateInput("Invalid input. End time must be larger than the start time.");
         }
@@ -45,7 +43,7 @@ internal class CodingController
     {
         var list = databaseMethods.GetSessions();
 
-        Helpers.CheckIfListIsNullOrEmpty(list);
+        Validation.CheckIfListIsNullOrEmpty(list);
 
         var sessionToDelete = AnsiConsole.Prompt(
             new SelectionPrompt<CodingSession>()
@@ -73,7 +71,7 @@ internal class CodingController
     {
         var list = databaseMethods.GetSessions();
 
-        Helpers.CheckIfListIsNullOrEmpty(list);
+        Validation.CheckIfListIsNullOrEmpty(list);
 
         var sessionToUpdate = AnsiConsole.Prompt(
             new SelectionPrompt<CodingSession>()
@@ -84,7 +82,7 @@ internal class CodingController
         var newStartTime = Helpers.GetDateInput("Enter the start time of your coding session (yyyy-MM-dd HH:mm)");
         var newEndTime = Helpers.GetDateInput("Enter the end time of your coding session (yyyy-MM-dd HH:mm)");
 
-        while (Helpers.IsEndTimeLowerThanStartTime(newStartTime, newEndTime))
+        while (Validation.IsEndTimeLowerThanStartTime(newStartTime, newEndTime))
         {
             newEndTime = Helpers.GetDateInput("Invalid input. End time must be higher than start time.");
         }
@@ -159,9 +157,5 @@ internal class CodingController
         var additionalList = databaseMethods.GetReportOfTotalAndAvg(choice, unit);
 
         ViewSessions(listOfReport, additionalList);
-    }
-
-    
-
-      
+    }  
 }
