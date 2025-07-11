@@ -43,7 +43,7 @@ internal class CodingController
 
     public void DeleteSession()
     {
-        var list = GetSessions();
+        var list = databaseMethods.GetSessions();
 
         Helpers.CheckIfListIsNullOrEmpty(list);
 
@@ -71,7 +71,7 @@ internal class CodingController
 
     public void UpdateSession()
     {
-        var list = GetSessions();
+        var list = databaseMethods.GetSessions();
 
         Helpers.CheckIfListIsNullOrEmpty(list);
 
@@ -104,6 +104,7 @@ internal class CodingController
         AnsiConsole.MarkupLine("Press any key to continue.");
         Console.ReadKey();
     }
+
     public void StartSession()
     {
         Helpers.DisplayMessage("Session started", "blue");
@@ -118,21 +119,6 @@ internal class CodingController
         var endTime = timer;
 
         AddSession(startTime, endTime);
-    }
-
-    public List<CodingSession>? GetSessions(string? sql = null)
-    {
-        using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
-
-        if (sql == null) sql = $"SELECT * FROM coding_tracker";
-
-        var listFromDB = connection.Query(sql).ToList();
-
-        if (listFromDB.Count == 0) return null;
-
-        var listOfCodingSessions = Helpers.ParseAnonObjToCodingSession(listFromDB);
-
-        return listOfCodingSessions;
     }
 
     public void ViewSessions(List<CodingSession>? list = null, List<string> additionalList = null)
@@ -168,47 +154,14 @@ internal class CodingController
                 new TextPrompt<string>($"Select the number of {choice} for your report."));
         }
 
-        var listOfReport = GetReport(choice, unit);
+        var listOfReport = databaseMethods.GetReport(choice, unit);
 
-        var additionalList = GetReportOfTotalAndAvg(choice, unit);
+        var additionalList = databaseMethods.GetReportOfTotalAndAvg(choice, unit);
 
         ViewSessions(listOfReport, additionalList);
     }
 
-    public List<CodingSession>? GetReport(ReportOption choice, string? unit)
-    {
-        var sql = $"SELECT * FROM coding_tracker ";
+    
 
-        _ = choice switch
-        {
-            ReportOption.Days => sql += $"WHERE EndTime > date('now', '-{unit} days')",
-            ReportOption.Months => sql += $"WHERE EndTime > date('now','start of month', '-{unit} months')",
-            ReportOption.Years => sql += $"WHERE EndTime > date('now','start of year', '-{unit} years')",
-            ReportOption.Total => sql
-        };
-
-        sql += " ORDER BY StartTime DESC";
-
-        return GetSessions(sql);
-    }
-
-    public List<string>? GetReportOfTotalAndAvg(ReportOption choice, string? unit)
-    {
-        using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
-
-        var sql = $"SELECT Duration FROM coding_tracker ";
-        _ = choice switch
-        {
-            ReportOption.Days => sql += $"WHERE EndTime > date('now', '-{unit} days')",
-            ReportOption.Months => sql += $"WHERE EndTime > date('now','start of month', '-{unit} months')",
-            ReportOption.Years => sql += $"WHERE EndTime > date('now','start of year', '-{unit} years')",
-            ReportOption.Total => sql
-        };
-
-        sql += " ORDER BY StartTime DESC";
-
-        var list = connection.Query<string>(sql).ToList();
-
-        return list;
-    }  
+      
 }

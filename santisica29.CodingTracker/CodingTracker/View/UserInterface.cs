@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Controller;
+using CodingTracker.Data;
 using Spectre.Console;
 using static CodingTracker.Enums;
 
@@ -26,7 +27,7 @@ internal class UserInterface
                     _codingController.AddSession();
                     break;
                 case MenuOption.ViewCodingSession:
-                    _codingController.ViewSessions(_codingController.GetSessions());
+                    _codingController.ViewSessions(DatabaseMethods.GetSessions());
                     break;
                 case MenuOption.DeleteCodingSession:
                     _codingController.DeleteSession();
