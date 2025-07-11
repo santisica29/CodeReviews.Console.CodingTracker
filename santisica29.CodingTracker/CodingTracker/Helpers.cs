@@ -40,32 +40,13 @@ internal static class Helpers
 
         if (dateInput.ToLower() == "t") return DateTime.Now.ToString("yyyy-MM-dd HH:mm");
 
-        while (!IsFormattedCorrectly(dateInput, "yyyy-MM-dd HH:mm") || String.IsNullOrEmpty(dateInput))
+        while (!Validation.IsFormattedCorrectly(dateInput, "yyyy-MM-dd HH:mm"))
         {
             dateInput = AnsiConsole.Prompt(
             new TextPrompt<string>("Invalid input, try again."));
         }
 
         return dateInput;
-    }
-
-    internal static bool IsFormattedCorrectly(string date, string format)
-    {
-        if (!DateTime.TryParseExact(date, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"), DateTimeStyles.None, out _))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    internal static bool IsEndTimeLowerThanStartTime(string startTime, string endTime)
-    {
-        var sT = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"));
-
-        var eT = DateTime.ParseExact(endTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"));
-
-        return eT < sT;
     }
 
     internal static string RunStopWatch()
@@ -180,17 +161,6 @@ internal static class Helpers
             .WithFormat(ConsoleTableBuilderFormat.Alternative)
             .WithTitle("-------------")
             .ExportAndWriteLine();
-    }
-
-    internal static void CheckIfListIsNullOrEmpty(List<CodingSession>? list)
-    {
-        if (list == null || list.Count == 0)
-        {
-            AnsiConsole.MarkupLine("[red]No data found.[/]");
-            AnsiConsole.MarkupLine("Press Any Key to Continue.");
-            Console.ReadKey();
-            return;
-        }
     }
 
     internal static void DisplayMessage(string message, string color = "blue")

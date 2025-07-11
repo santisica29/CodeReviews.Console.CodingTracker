@@ -123,7 +123,7 @@ internal class CodingController
 
     public void ViewSessions(List<CodingSession>? list = null, List<string> additionalList = null)
     {
-        Helpers.CheckIfListIsNullOrEmpty(list);
+        Validation.CheckIfListIsNullOrEmpty(list);
 
         Helpers.CreateTable(list, ["ID", "Start Time", "End Time", "Duration"]);
 

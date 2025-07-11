@@ -7,6 +7,7 @@ namespace CodingTracker.View;
 internal class UserInterface
 {
     private readonly CodingController _codingController = new();
+    private readonly DatabaseMethods _databaseMethods = new();
 
     internal void MainMenu()
     {
@@ -27,7 +28,7 @@ internal class UserInterface
                     _codingController.AddSession();
                     break;
                 case MenuOption.ViewCodingSession:
-                    _codingController.ViewSessions(DatabaseMethods.GetSessions());
+                    _codingController.ViewSessions(_databaseMethods.GetSessions());
                     break;
                 case MenuOption.DeleteCodingSession:
                     _codingController.DeleteSession();
