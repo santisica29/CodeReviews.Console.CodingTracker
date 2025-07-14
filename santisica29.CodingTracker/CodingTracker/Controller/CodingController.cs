@@ -121,7 +121,13 @@ internal class CodingController
 
     public void ViewSessions(List<CodingSession>? list = null, List<string> additionalList = null)
     {
-        Validation.CheckIfListIsNullOrEmpty(list);
+        if (Validation.IsListEmpty(list))
+        {
+            AnsiConsole.MarkupLine("[red]No data found.[/]");
+            AnsiConsole.MarkupLine("Press Any Key to Continue.");
+            Console.ReadKey();
+            return;
+        }
 
         Helpers.CreateTable(list, ["ID", "Start Time", "End Time", "Duration"]);
 

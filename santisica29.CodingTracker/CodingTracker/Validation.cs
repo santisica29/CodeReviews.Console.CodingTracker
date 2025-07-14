@@ -25,14 +25,8 @@ internal static class Validation
         return eT < sT;
     }
 
-    internal static void CheckIfListIsNullOrEmpty<T>(List<T>? list)
+    internal static void IsListEmpty<T>(List<T>? list)
     {
-        if (list == null || list.Count == 0)
-        {
-            AnsiConsole.MarkupLine("[red]No data found.[/]");
-            AnsiConsole.MarkupLine("Press Any Key to Continue.");
-            Console.ReadKey();
-            return;
-        }
+        return list.Count == 0
     }
 }
