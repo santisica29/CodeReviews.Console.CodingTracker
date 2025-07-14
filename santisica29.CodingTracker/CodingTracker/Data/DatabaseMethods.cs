@@ -52,13 +52,11 @@ internal class DatabaseMethods
 
         if (sql == null) sql = $"SELECT * FROM coding_tracker";
 
-        var listFromDB = connection.Query(sql).ToList();
+        var listFromDB = connection.Query<CodingSession>(sql).ToList();
 
-        if (listFromDB.Count == 0) return null;
+        if (listFromDB.Count == 0) return Enumerable.Empty<CodingSession>().ToList();
 
-        var listOfCodingSessions = Helpers.ParseAnonObjToCodingSession(listFromDB);
-
-        return listOfCodingSessions;
+        return listFromDB;
     }
 
     public List<CodingSession>? GetReport(ReportOption choice, string? unit)

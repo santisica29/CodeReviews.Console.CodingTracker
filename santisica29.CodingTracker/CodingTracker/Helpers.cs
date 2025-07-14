@@ -12,27 +12,6 @@ internal static class Helpers
 {
     private static readonly UserInterface userInterface = new();
 
-    internal static List<CodingSession> ParseAnonObjToCodingSession(List<dynamic> listFromDB)
-    {
-        var list = new List<CodingSession>();
-
-        foreach (var item in listFromDB)
-        {
-            var newCodingSession = new CodingSession()
-            {
-                Id = (int)item.Id,
-                StartTime = DateTime.ParseExact(item.StartTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US")),
-                EndTime = DateTime.ParseExact(item.EndTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US")),
-                Duration = TimeSpan.Parse(item.Duration),
-            };
-
-
-            list.Add(newCodingSession);
-        }
-
-        return list;
-    }
-
     internal static string GetDateInput(string message)
     {
         var dateInput = AnsiConsole.Prompt(
