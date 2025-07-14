@@ -15,6 +15,10 @@ Developed using C#, SQLite, Dapper ORM and [ConsoleTableExt Library](https://git
 - [x] You have to use Separation of Concerns to keep your code clean and organize.
 - [x] You should adhere to the DRY principle when you can .
 
+# Instructions to run
+
+- Change the working directory in launchSettings.json
+
 # Features
 
 * SQLite database connection
