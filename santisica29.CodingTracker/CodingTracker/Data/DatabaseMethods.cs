@@ -8,13 +8,15 @@ namespace CodingTracker.Data;
 
 internal class DatabaseMethods
 {
-    public int CreateSession(object newSession)
+    public int CreateSession(CodingSession session)
     {
         using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
 
         var sql =
             @$"INSERT INTO {DatabaseInitializer.GetDBName()} (startTime, endTime, duration)
                VALUES (@StartTime, @EndTime, @Duration)";
+
+        var newSession = new { StartTime = startTime, EndTime = endTime, Duration = session.CalculateDuration().ToString() };
 
         var affectedRows = connection.Execute(sql, newSession);
 
@@ -31,7 +33,7 @@ internal class DatabaseMethods
         return affectedRows;
     }
 
-    public int UpdateSession(object session)
+    public int UpdateSession(CodingSession session)
     {
         using var connection = new SqliteConnection(DatabaseInitializer.GetConnectionString());
 

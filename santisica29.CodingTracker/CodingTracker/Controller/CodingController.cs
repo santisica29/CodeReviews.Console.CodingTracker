@@ -28,9 +28,7 @@ internal class CodingController
             DateTime.ParseExact(endTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"))
         );
 
-        var newSession = new { StartTime = startTime, EndTime = endTime, Duration = session.CalculateDuration().ToString() };
-
-        var affectedRows = databaseMethods.CreateSession(newSession);
+        var affectedRows = databaseMethods.CreateSession(session);
 
         if (affectedRows > 0) Helpers.DisplayMessage("Addition completed.", "green");
         else Helpers.DisplayMessage("No changes made");
@@ -88,11 +86,12 @@ internal class CodingController
         }
 
         var session = new CodingSession(
+            sessionToUpdate.Id,
             DateTime.ParseExact(newStartTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US")),
             DateTime.ParseExact(newEndTime, "yyyy-MM-dd HH:mm", new CultureInfo("en-US"))
         );
 
-        var newSession = new { Id = sessionToUpdate.Id, NewStartTime = newStartTime, NewEndTime = newEndTime, Duration = session.CalculateDuration().ToString()};
+        CodingSession newSession = new { Id = sessionToUpdate.Id, NewStartTime = newStartTime, NewEndTime = newEndTime, Duration = session.CalculateDuration()};
 
         var affectedRows = databaseMethods.UpdateSession(newSession);
 
@@ -106,6 +105,7 @@ internal class CodingController
     public void StartSession()
     {
         Helpers.DisplayMessage("Session started", "blue");
+
         var startTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
 
         var timer = Helpers.RunStopWatch();
